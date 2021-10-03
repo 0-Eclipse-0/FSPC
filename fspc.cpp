@@ -1,9 +1,7 @@
 #include <iostream>
 #include <iomanip>
-#include <string>
 
 using namespace std;
-using std::string;
 
 const string pn = "[FSPC] ";
 const string er = "[ERR] ";
