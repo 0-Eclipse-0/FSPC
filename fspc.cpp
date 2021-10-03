@@ -5,6 +5,15 @@ using namespace std;
 
 const string pn = "[FSPC] ";
 const string er = "[ERR] ";
+
+// bool sonic_mode = 0;
+// if(sonic_mode)
+// {
+//   const int cost_mult = 9;
+// }else{
+//   const int cost_mult = 3;
+// }
+
 const int cost_mult = 3; // Default cost multiplier (Usually 3x in food industry)
 
 void bad_inp(int type){
