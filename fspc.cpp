@@ -103,13 +103,23 @@ int Product::GetNumPort()
   return (units*unit_size)/portion_size;
 }
 
-void Product::OutFileText(char filename[50]) {
+void Product::OutFileText(char filename[50])
+{
   ofstream output_file;
   output_file.open(filename, ios::app);
   output_file<<prod_name<<", "<<units<<", $"<<case_cost;
   output_file<<", "<<unit_size<<"oz, "<<portion_size;
   output_file<<"oz, "<<GetNumPort()<<", $"<<setprecision(2);
   output_file<<fixed<<GetPrice()<<endl;
+}
+
+void Create_OFile(string filename)
+{
+  ofstream output_file;
+
+  output_file.open(filename, ios::out | ios::trunc);
+  output_file<<"Product Name, Case Size, Case Cost, Unit Size, ";
+  output_file<<"Portion Size, Estimated Portions, Estimated Price Per"<<endl;
 }
 
 void cls()
@@ -137,8 +147,6 @@ void get_info(bool out_file)
   char out_to_which;
 
   if (out_file) {
-    ofstream output_file;
-
     while(1)
     {
       cout<<pn<<"Type '1' to add to an old file and '2' to output to a new file: ";
@@ -153,34 +161,19 @@ void get_info(bool out_file)
     cin>>filename;
     strcat(filename, ".csv");
 
-
-    switch(out_to_which) {
-      case '1':
-        {
+    if(out_to_which == '1')
+    {
           ifstream file_exists;
           file_exists.open(filename);
-          if(file_exists){
+          if(file_exists)
+          {
             cout<<pn<<"Outputting to existing <"<<filename<<">..."<<endl;
           } else {
             cout<<pn<<"<"<<filename<<"> does not exist. Creating..."<<endl;
-            output_file.open(filename, ios::out | ios::trunc);
-            output_file<<"Product Name, Case Size, Case Cost, Unit Size, ";
-            output_file<<"Portion Size, Estimated Portions, Estimated Price Per"<<endl;
+            Create_OFile(filename);
           }
-          break;
-        }
-      case '2':
-        {
-          output_file.open(filename, ios::out | ios::trunc);
-          output_file<<"Product Name, Case Size, Case Cost, Unit Size, ";
-          output_file<<"Portion Size, Estimated Portions, Estimated Price Per"<<endl;
-          break;
-        }
-      default:
-        {
-          bad_inp(2);
-          break;
-        }
+    } else {
+          Create_OFile(filename);
     }
   }
 
