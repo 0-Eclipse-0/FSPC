@@ -25,6 +25,7 @@ void bad_inp(int type){
       break;
     case 2:
       cerr<<er<<"Invalid input. Exiting..."<<endl;
+      exit(3);
       break;
     default:
       cerr<<er<<"Invalid input..."<<endl;
@@ -133,15 +134,54 @@ void get_info(bool out_file)
   bool continue_prog = 1;
   char usr_chc;
   char filename[50];
+  char out_to_which;
 
   if (out_file) {
     ofstream output_file;
+
+    while(1)
+    {
+      cout<<pn<<"Type '1' to add to an old file and '2' to output to a new file: ";
+      cin>>out_to_which;
+      if(out_to_which == '1' | out_to_which == '2') {
+        break;
+      }
+      bad_inp(1);
+    }
+
     cout<<pn<<"Enter file name (Max: 50 characters): ";
     cin>>filename;
     strcat(filename, ".csv");
-    output_file.open(filename, ios::out | ios::trunc);
-    output_file<<"Product Name, Case Size, Case Cost, Unit Size, ";
-    output_file<<"Portion Size, Estimated Portions, Estimated Price Per"<<endl;
+
+
+    switch(out_to_which) {
+      case '1':
+        {
+          ifstream file_exists;
+          file_exists.open(filename);
+          if(file_exists){
+            cout<<pn<<"Outputting to existing <"<<filename<<">..."<<endl;
+          } else {
+            cout<<pn<<"<"<<filename<<"> does not exist. Creating..."<<endl;
+            output_file.open(filename, ios::out | ios::trunc);
+            output_file<<"Product Name, Case Size, Case Cost, Unit Size, ";
+            output_file<<"Portion Size, Estimated Portions, Estimated Price Per"<<endl;
+          }
+          break;
+        }
+      case '2':
+        {
+          output_file.open(filename, ios::out | ios::trunc);
+          output_file<<"Product Name, Case Size, Case Cost, Unit Size, ";
+          output_file<<"Portion Size, Estimated Portions, Estimated Price Per"<<endl;
+          break;
+        }
+      default:
+        {
+          bad_inp(2);
+          break;
+        }
+    }
   }
 
 while(continue_prog){
@@ -185,7 +225,7 @@ int main(){
   startup();
 
   cout<<pn<<"Would you like to output your product information to a file? (Y/n): ";
-  cin >> usr_chc;
+  cin>>usr_chc;
 
   if (usr_chc == 'Y' | usr_chc == 'y') {
     get_info(1);
