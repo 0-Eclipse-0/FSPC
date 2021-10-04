@@ -17,7 +17,8 @@ const string er = "[ERR] ";
 
 const int cost_mult = 3; // Default cost multiplier (Usually 3x in food industry)
 
-void bad_inp(int type){
+void bad_inp(int type)  // Error messages
+{
   switch(type)
   {
     case 1:
@@ -33,7 +34,7 @@ void bad_inp(int type){
   }
 }
 
-class Product
+class Product // Store product info
 {
   public:
     void EnterInfo(bool out_2_file);
@@ -52,7 +53,7 @@ class Product
     char prod_name[50];
 };
 
-void Product::EnterInfo(bool out_2_file)
+void Product::EnterInfo(bool out_2_file) // User inputs information
 {
   if(out_2_file){
     cin.ignore();
@@ -103,7 +104,7 @@ int Product::GetNumPort()
   return (units*unit_size)/portion_size;
 }
 
-void Product::OutFileText(char filename[50])
+void Product::OutFileText(char filename[50]) // Append to file
 {
   ofstream output_file;
   output_file.open(filename, ios::app);
@@ -113,7 +114,7 @@ void Product::OutFileText(char filename[50])
   output_file<<fixed<<GetPrice()<<endl;
 }
 
-void Create_OFile(string filename)
+void Create_OFile(string filename) // Create file
 {
   ofstream output_file;
 
@@ -122,20 +123,9 @@ void Create_OFile(string filename)
   output_file<<"Portion Size, Estimated Portions, Estimated Price Per"<<endl;
 }
 
-void cls()
+void startup() // Clear screen & disp prog name
 {
-  cout<<"\033[2J\033[1;1H";
-}
-
-void welcome_msg()
-{
-  cout<<"[Food Service Price Calculator]"<<endl;
-}
-
-void startup()
-{
-  cls();
-  welcome_msg();
+  cout<<"\033[2J\033[1;1H"<<"[Food Service Price Calculator]"<<endl;
 }
 
 void get_info(bool out_file)
@@ -146,12 +136,14 @@ void get_info(bool out_file)
   char filename[50];
   char out_to_which;
 
-  if (out_file) {
+  if (out_file)
+  {
     while(1)
     {
       cout<<pn<<"Type '1' to add to an old file and '2' to output to a new file: ";
       cin>>out_to_which;
-      if(out_to_which == '1' | out_to_which == '2') {
+      if(out_to_which == '1' | out_to_which == '2')
+      {
         break;
       }
       bad_inp(1);
@@ -177,10 +169,12 @@ void get_info(bool out_file)
     }
   }
 
-while(continue_prog){
-    if(out_file){
+  while(continue_prog)
+  {
+    if(out_file)
+    {
       NewProd.EnterInfo(1);
-    }else{
+    } else {
       NewProd.EnterInfo(0);
     }
 
@@ -189,7 +183,8 @@ while(continue_prog){
     cout<<" per sale \nwith a total of ~"<<NewProd.GetNumPort();
     cout<<" available portions per case!"<<endl;
 
-    if(out_file){
+    if(out_file)
+    {
       NewProd.OutFileText(filename);
       cout<<pn<<"Information outputted to <"<<filename<<".csv>"<<endl;
     }
@@ -200,18 +195,18 @@ while(continue_prog){
     switch(usr_chc)
     {
       case 'Y': case 'y':
-        break;
+        break;  // Continue
       case 'n': case 'N':
-        continue_prog = 0;
+        continue_prog = 0; // Loop exit
         break;
       default:
         bad_inp(2);
-        exit(3);
     };
   }
 }
 
-int main(){
+int main()
+{
   bool valid_inp;
   char usr_chc;
 
@@ -220,7 +215,8 @@ int main(){
   cout<<pn<<"Would you like to output your product information to a file? (Y/n): ";
   cin>>usr_chc;
 
-  if (usr_chc == 'Y' | usr_chc == 'y') {
+  if (usr_chc == 'Y' | usr_chc == 'y')
+  {
     get_info(1);
   } else if (usr_chc == 'N' | usr_chc == 'n') {
     get_info(0);
