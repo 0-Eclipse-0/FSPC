@@ -28,6 +28,9 @@ void bad_inp(int type)  // Error messages
       cerr<<er<<"Invalid input. Exiting..."<<endl;
       exit(3);
       break;
+    case 3:
+      cerr<<er<<"Calculations error caused by faulty input. Exiting..."<<endl;
+      exit(3);
     default:
       cerr<<er<<"Invalid input..."<<endl;
       break;
@@ -55,38 +58,43 @@ class Product // Store product info
 
 void Product::EnterInfo(bool out_2_file) // User inputs information
 {
-  if(out_2_file){
+  if(out_2_file)
+  {
     cin.ignore();
     cout<<pn<<"Enter the product name: ";
     cin.getline(prod_name, 49);
   }
 
-  cout<<pn<<"Enter the number of units per case (i.e. bags): ";
-  while((!(cin >> units)) | (units <= 0)){
+  cout<<pn<<"Enter the number of units per case (i.e. bags): "; // Get num of units
+  while((!(cin >> units)) | (units <= 0))
+  {
     bad_inp(1);
     cin.clear();
     cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
     cout<<pn<<"Enter the number of units per case (i.e. bags): ";
   }
 
-  cout<<pn<<"Enter the (per) unit size (in oz): ";
-  while((!(cin >> unit_size)) | (unit_size <= 0)){
+  cout<<pn<<"Enter the (per) unit size (in oz): ";               // Get unit size
+  while((!(cin >> unit_size)) | (unit_size <= 0))
+  {
     bad_inp(1);
     cin.clear();
     cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
     cout<<pn<<"Enter the (per) unit size (in oz): ";
   }
 
-  cout<<pn<<"Enter the cost per case: ";
-  while((!(cin >> case_cost)) | (case_cost <= 0)){
+  cout<<pn<<"Enter the cost per case: ";                          // Get case cost
+  while((!(cin >> case_cost)) | (case_cost <= 0) | (units*unit_size/case_cost/1 <= 0.01))
+  {
     bad_inp(1);
     cin.clear();
     cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
     cout<<pn<<"Enter the cost per case: ";
   }
 
-  cout<<pn<<"Enter the desired portion size (in oz): ";
-  while((!(cin >> portion_size)) | (portion_size <= 0)){
+  cout<<pn<<"Enter the desired portion size (in oz): ";           // Get portion size
+  while((!(cin >> portion_size)) | (portion_size <= 0) | (portion_size >= units * unit_size))
+  {
     bad_inp(1);
     cin.clear();
     cin.ignore(std::numeric_limits<std::streamsize>::max(),'\n');
@@ -107,6 +115,7 @@ int Product::GetNumPort()
 void Product::OutFileText(char filename[50]) // Append to file
 {
   ofstream output_file;
+
   output_file.open(filename, ios::app);
   output_file<<prod_name<<", "<<units<<", $"<<case_cost;
   output_file<<", "<<unit_size<<"oz, "<<portion_size;
@@ -142,7 +151,7 @@ void get_info(bool out_file)
     {
       cout<<pn<<"Type '1' to add to an old file and '2' to output to a new file: ";
       cin>>out_to_which;
-      if(out_to_which == '1' | out_to_which == '2')
+      if(out_to_which == '1' | out_to_which == '2') // Proper input
       {
         break;
       }
@@ -176,6 +185,11 @@ void get_info(bool out_file)
       NewProd.EnterInfo(1);
     } else {
       NewProd.EnterInfo(0);
+    }
+
+    if (NewProd.GetPrice() <= 0.01) // Prevent calculation error
+    {
+      bad_inp(3);
     }
 
     cout<<pn<<"For a portion size of "<<NewProd.DispPortSize();
